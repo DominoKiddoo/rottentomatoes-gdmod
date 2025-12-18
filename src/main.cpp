@@ -22,7 +22,7 @@ $execute {
 
     BindManager::get()->registerBindable({
         BIND_ID,
-        "Throw Tomato!",
+        "Throw Tomato",
         "Throws a tomato at the screen.", 
         { Keybind::create(KEY_T, Modifier::Alt) }, 
         "Booooo!"
