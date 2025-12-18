@@ -1,0 +1,37 @@
+{
+	"geode": "4.10.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "dominodev.rottentomatoes",
+	"name": "Booooo!",
+	"version": "v1.0.0",
+	"developer": "dominodev",
+	"description": "Throw tomatoes at things you dont like.",
+	"dependencies": {
+		"geode.node-ids": ">=v1.20.0",
+		"geode.custom-keybinds": {
+			"version": "v1.1.0",
+			"importance": "required"
+		},
+		"user95401.gif-sprites": ">=v2.0.0"
+	},
+	"resources": {
+		"files": [
+			"resources/tomatothrow.gif",
+			"resources/splat.mp3"
+		]
+	},
+	"tags": ["universal", "joke", "offline"],
+	"settings": {
+			"playsound": {
+			"type": "bool",
+			"name": "Play Splat Sound",
+			"description": "Play a splat sound when the tomato hits.",
+			"default": true
+		}
+	}
+}
