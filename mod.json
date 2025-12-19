@@ -7,8 +7,8 @@
 		"ios": "2.2074"
 	},
 	"id": "dominodev.rottentomatoes",
-	"name": "Booooo!",
-	"version": "v1.0.0",
+	"name": "Rotten Tomatoes",
+	"version": "v1.0.1",
 	"developer": "dominodev",
 	"description": "Throw tomatoes at things you dont like.",
 	"dependencies": {

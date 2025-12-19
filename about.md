@@ -1,4 +1,4 @@
-# Booooo!
+# Rotten Tomatoes
 
 THROW TOMATOES AT THINGS YOU <cr>HATE</cr>!!!
 
@@ -7,3 +7,6 @@ If you hold it in you can rapid fire throw. Great for using on map-packs!
 
 ## Credits
 Sound Effect by [freesound_community](https://pixabay.com/users/freesound_community-4669145) from [Pixabay](https://pixabay.com/sound-effects)
+
+
+
