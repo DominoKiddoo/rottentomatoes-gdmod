@@ -40,7 +40,7 @@ $execute {
                 return ListenerResult::Propagate;
             }
 
-            auto tomato = imgp::AnimatedSprite* animSprite = imgp::AnimatedSprite::from(tomatoThrow);
+            auto tomato = imgp::AnimatedSprite::from(tomatoThrow);
             auto mousePos = geode::cocos::getMousePos();
 
             log::info("Tomato thrown!");
