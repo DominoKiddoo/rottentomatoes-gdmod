@@ -17,7 +17,7 @@
 			"version": "v1.1.0",
 			"importance": "required"
 		},
-		"user95401.gif-sprites": ">=v2.0.0"
+		"prevter.imageplus": ">=v1.0.3"
 	},
 	"resources": {
 		"files": [

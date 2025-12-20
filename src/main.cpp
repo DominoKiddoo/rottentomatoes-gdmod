@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <geode.custom-keybinds/include/Keybinds.hpp>
-#include <user95401.gif-sprites/include/CCGIFAnimatedSprite.hpp>
+#include <prevter.imageplus/include/api.hpp>
 #include <Geode/utils/cocos.hpp>
 
 using namespace geode::prelude;
@@ -33,13 +33,15 @@ $execute {
             auto director = CCDirector::sharedDirector();
             auto scene = director->getRunningScene();
             if (!scene) return ListenerResult::Propagate;
-            auto tomato = CCGIFAnimatedSprite::create("tomatothrow.gif"_spr);
-            auto mousePos = geode::cocos::getMousePos();
+            auto tomatoThrow = CCSprite::create("tomatothrow.gif"_spr);
 
-            if (!tomato) {
+            if (!tomatoThrow) {
                 log::error("failed to load gif");
                 return ListenerResult::Propagate;
             }
+
+            auto tomato = imgp::AnimatedSprite::from(tomatoThrow);
+            auto mousePos = geode::cocos::getMousePos();
 
             log::info("Tomato thrown!");
 
@@ -47,9 +49,9 @@ $execute {
             scene->addChild(tomato, 999999); 
             tomato->setPosition(mousePos);
 
-            tomato->setLoop(false);
+            tomato->setForceLoop(std::make_optional<bool>(false));
+            tomato->setCurrentFrame(0);
             tomato->play();
-
 
             tomato->runAction(CCSequence::create(
                 CCDelayTime::create(0.47f), // i completly guessed that timing and it works so yeah
@@ -57,7 +59,6 @@ $execute {
                     if (playSFX) {
                         FMODAudioEngine::get()->playEffect("splat.mp3"_spr);
                     }
-                   
                 }),
 
                 CCDelayTime::create(2.83f),
