@@ -1,6 +1,5 @@
 #include <Geode/Geode.hpp>
 #include <geode.custom-keybinds/include/Keybinds.hpp>
-#include <user95401.gif-sprites/include/CCGIFAnimatedSprite.hpp>
 #include <Geode/utils/cocos.hpp>
 
 using namespace geode::prelude;
@@ -33,7 +32,7 @@ $execute {
             auto director = CCDirector::sharedDirector();
             auto scene = director->getRunningScene();
             if (!scene) return ListenerResult::Propagate;
-            auto tomato = CCGIFAnimatedSprite::create("tomatothrow.gif"_spr);
+            auto tomato = CCSprite::create("tomatothrow.gif"_spr);
             auto mousePos = geode::cocos::getMousePos();
 
             if (!tomato) {
@@ -57,7 +56,6 @@ $execute {
                     if (playSFX) {
                         FMODAudioEngine::get()->playEffect("splat.mp3"_spr);
                     }
-                   
                 }),
 
                 CCDelayTime::create(2.83f),
