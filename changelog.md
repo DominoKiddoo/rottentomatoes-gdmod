@@ -2,5 +2,5 @@
 - Initial release
 
 # 1.0.1
-- Changed mods name.
+- Changed mods name, and swapped to imageplus
 

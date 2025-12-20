@@ -25,7 +25,7 @@ $execute {
         "Throw Tomato",
         "Throws a tomato at the screen.", 
         { Keybind::create(KEY_T, Modifier::Alt) }, 
-        "Booooo!"
+        "Rotten Tomatoes"
     });
 
     new EventListener(+[](InvokeBindEvent* event) {
@@ -49,7 +49,7 @@ $execute {
             scene->addChild(tomato, 999999); 
             tomato->setPosition(mousePos);
 
-            tomato->setForceLoop(std::make_optional<bool>(false));
+            tomato->setForceLoop(false);
             tomato->setCurrentFrame(0);
             tomato->play();
 
@@ -60,10 +60,15 @@ $execute {
                         FMODAudioEngine::get()->playEffect("splat.mp3"_spr);
                     }
                 }),
+                
+                CCDelayTime::create(0.3f),
 
-                CCDelayTime::create(2.83f),
+                CallFuncExt::create([tomato]() {
+                   tomato->stop();
+                   tomato->unscheduleUpdate();
+                }),
 
-                CCDelayTime::create(1.0f),
+                CCDelayTime::create(3.0f),
                 CCFadeOut::create(1.f),
 
                 CallFuncExt::create([tomato]() {
