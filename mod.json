@@ -8,7 +8,7 @@
 	},
 	"id": "dominodev.rottentomatoes",
 	"name": "Rotten Tomatoes",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developer": "dominodev",
 	"description": "Throw tomatoes at things you dont like.",
 	"dependencies": {
@@ -23,7 +23,9 @@
 		"files": [
 			"resources/tomatothrow.gif",
 			"resources/splat.mp3"
-		]
+		], "sprites": [
+			"resources/testtomato.png"
+		]	
 	},
 	"tags": ["universal", "joke", "offline"],
 	"settings": {
@@ -32,6 +34,104 @@
 			"name": "Play Splat Sound",
 			"description": "Play a splat sound when the tomato hits.",
 			"default": true
+		},
+
+		"custom-image-settings": {
+            "type": "title",
+            "name": "Custom Tomatoes"
+        },
+
+		"customimages": {
+			"type": "bool",
+			"name": "Custom Images",
+			"description": "Allows using custom images for throwing the tomatoes (requires some setup, gifs not supported)",
+			"default": false
+		},
+
+		"ctomatoimage": {
+			"type": "file",
+			"name": "Custom Tomato Image",
+			"description": "Custom tomato image!!! png recomended ",
+			"default": "",
+			"control": {
+				"dialog": "open",
+				"filters": [
+					{
+						"files": ["*.png", "*.jpg", "*.jpeg"],
+						"description": "Static images."
+					}
+					
+				]
+
+			}
+		},
+
+		"ctomatoscale": {
+			"type": "float",
+			"name": "Tomato Starting Scale",
+			"description": "Scale the tomato just in case its too big or small.",
+			"default": 1,
+			"min": 0.1,
+			"max": 2,
+			"control": {
+				"arrows": true,
+				"arrow-step": 0.1,
+				"slider": true,
+				"slider-step": 0.1,
+				"input": true
+			}
+		},
+
+		"ctomatoendingscale": {
+			"type": "float",
+			"name": "Tomato Ending Scale",
+			"description": "End scale of tomato just before it hits",
+			"default": 1,
+			"min": 0.1,
+			"max": 2,
+			"control": {
+				"arrows": true,
+				"arrow-step": 0.1,
+				"slider": true,
+				"slider-step": 0.1,
+				"input": true
+			}
+		},
+
+		"ctomatosplatimage": {
+			"type": "file",
+			"name": "Custom Tomato Splat Image (Optional)",
+			"description": "Custom tomato image to show once splat. If no image is uploaded, it will just use your tomato image. ",
+			"default": "",
+			"control": {
+				"dialog": "open",
+				"filters": [
+					{
+						"files": ["*.png", "*.jpg", "*.jpeg"],
+						"description": "Static images."
+					}
+					
+				]
+
+			}
+		},
+
+		"ctomatosplatscale": {
+			"type": "float",
+			"name": "Tomato Splat Scale",
+			"description": "Scale the splat tomato image just in case its too big or small. (or make it really big for comedic effect)",
+			"default": 1,
+			"min": 0.1,
+			"max": 2,
+			"control": {
+				"arrows": true,
+				"arrow-step": 0.1,
+				"slider": true,
+				"slider-step": 0.1,
+				"input": true
+			}
 		}
+
+
 	}
 }

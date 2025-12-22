@@ -4,3 +4,6 @@
 # 1.0.1
 - Changed mods name, and swapped to imageplus
 
+# 1.0.2
+- Added custom tomato image support
+
