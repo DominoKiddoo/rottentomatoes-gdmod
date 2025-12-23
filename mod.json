@@ -8,7 +8,7 @@
 	},
 	"id": "dominodev.rottentomatoes",
 	"name": "Rotten Tomatoes",
-	"version": "v1.0.2",
+	"version": "v1.0.3",
 	"developer": "dominodev",
 	"description": "Throw tomatoes at things you dont like.",
 	"dependencies": {

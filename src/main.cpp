@@ -2,29 +2,26 @@
 #include <geode.custom-keybinds/include/Keybinds.hpp>
 #include <prevter.imageplus/include/api.hpp>
 #include <Geode/utils/cocos.hpp>
+#include <Geode/utils/string.hpp>
 
 using namespace geode::prelude;
 using namespace keybinds;
-auto playSFX = true;
 
+auto playSFX = true;
 auto useGif = false;
 
 $on_mod(Loaded) {
-	auto mod = Mod::get();
-
-    // for whatever reason i have to do it this way cuz just getting it in the execute block doesnt work :(
+    auto mod = Mod::get();
 
     playSFX = mod->getSettingValue<bool>("playsound");
-	listenForSettingChangesV3<bool>("playsound", [](bool value) {
-		playSFX = value;
-	}, mod);
-
+    listenForSettingChangesV3<bool>("playsound", [](bool value) {
+        playSFX = value;
+    }, mod);
 
     useGif = mod->getSettingValue<bool>("customimages");
-	listenForSettingChangesV3<bool>("customimages", [](bool value) {
-		useGif = value;
-	}, mod);
-
+    listenForSettingChangesV3<bool>("customimages", [](bool value) {
+        useGif = value;
+    }, mod);
 }
 
 $execute {
@@ -43,15 +40,17 @@ $execute {
             auto director = CCDirector::sharedDirector();
             auto scene = director->getRunningScene();
             if (!scene) return ListenerResult::Propagate;
+            
             auto tomatoThrow = CCSprite::create("tomatothrow.gif"_spr);
-
             if (!tomatoThrow) {
                 log::error("failed to load gif");
                 return ListenerResult::Propagate;
             }
             
             auto mousePos = geode::cocos::getMousePos();
-            if (!useGif) {
+            auto cTomatoImage = Mod::get()->getSettingValue<std::filesystem::path>("ctomatoimage");
+
+            if (!useGif || cTomatoImage.empty()) {
                 auto tomato = imgp::AnimatedSprite::from(tomatoThrow);
                 log::info("Tomato thrown!");
 
@@ -64,7 +63,7 @@ $execute {
                 tomato->play();
 
                 tomato->runAction(CCSequence::create(
-                    CCDelayTime::create(0.47f), // i completly guessed that timing and it works so yeah
+                    CCDelayTime::create(0.47f),
                     CallFuncExt::create([tomato]() {
                         if (playSFX) {
                             FMODAudioEngine::get()->playEffect("splat.mp3"_spr);
@@ -74,8 +73,8 @@ $execute {
                     CCDelayTime::create(0.3f),
 
                     CallFuncExt::create([tomato]() {
-                    tomato->stop();
-                    tomato->unscheduleUpdate();
+                        tomato->stop();
+                        tomato->unscheduleUpdate();
                     }),
 
                     CCDelayTime::create(3.0f),
@@ -88,13 +87,12 @@ $execute {
                     nullptr
                 ));
 
-
                 return ListenerResult::Propagate;
             } else {
-                log::info("Running custom tomato logic");
+                // log::info("Running custom tomato logic");
 
-                auto cTomatoImage = Mod::get()->getSettingValue<std::filesystem::path>("ctomatoimage");
-                auto tomato = CCSprite::create(cTomatoImage.string().c_str());
+                auto pathStr = geode::utils::string::pathToString(cTomatoImage);
+                auto tomato = CCSprite::create(pathStr.c_str());
 
                 if (!tomato) {
                     log::error("failed to load custom tomato image");
@@ -104,7 +102,6 @@ $execute {
                 auto ctScale = Mod::get()->getSettingValue<double>("ctomatoscale");
                 auto endScale = Mod::get()->getSettingValue<double>("ctomatoendingscale");
 
-                auto director = CCDirector::sharedDirector();
                 auto winSize = director->getWinSize();
 
                 CCPoint startPos = ccp(winSize.width / 2.f, -tomato->getContentSize().height);
@@ -116,7 +113,6 @@ $execute {
 
                 float totalTime = 0.35f;
                 float halfTime = totalTime / 2.0f;
-
                 float peakScale = static_cast<float>(ctScale) * 1.3f;
 
                 auto rawMove = CCMoveTo::create(totalTime, endPos);
@@ -147,7 +143,9 @@ $execute {
                             FMODAudioEngine::get()->playEffect("splat.mp3"_spr);
                         }
 
-                        auto texture = CCTextureCache::sharedTextureCache()->addImage(tomatoSplatTexture.string().c_str(), false);
+                        auto splatPathStr = geode::utils::string::pathToString(tomatoSplatTexture);
+                        auto texture = CCTextureCache::sharedTextureCache()->addImage(splatPathStr.c_str(), false);
+                        
                         if (texture) {
                             tomato->setTexture(texture);
                             tomato->setTextureRect({0, 0, texture->getContentSize().width, texture->getContentSize().height});
