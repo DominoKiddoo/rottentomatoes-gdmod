@@ -11,5 +11,7 @@ Update 1.0.2 introduced <cy>custom tomato support!</c> Go to the mod settings to
 ## Credits
 Sound Effect by [freesound_community](https://pixabay.com/users/freesound_community-4669145) from [Pixabay](https://pixabay.com/sound-effects)
 
+Thanks to steechy for testing a potentially bugfixed version of the mod.
+
 
 

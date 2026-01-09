@@ -10,3 +10,7 @@
 # 1.0.3
 - Fixed possible pitfalls
 
+# 1.0.4
+- Changed gif to webp to fix crash on some devices.
+
+

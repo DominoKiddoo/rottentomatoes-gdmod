@@ -41,7 +41,7 @@ $execute {
             auto scene = director->getRunningScene();
             if (!scene) return ListenerResult::Propagate;
             
-            auto tomatoThrow = CCSprite::create("tomatothrow.gif"_spr);
+            auto tomatoThrow = CCSprite::create("tomatothrow.webp"_spr);
             if (!tomatoThrow) {
                 log::error("failed to load gif");
                 return ListenerResult::Propagate;
@@ -73,7 +73,7 @@ $execute {
                     CCDelayTime::create(0.3f),
 
                     CallFuncExt::create([tomato]() {
-                        tomato->stop();
+                        tomato->pause();
                         tomato->unscheduleUpdate();
                     }),
 
@@ -89,8 +89,6 @@ $execute {
 
                 return ListenerResult::Propagate;
             } else {
-                // log::info("Running custom tomato logic");
-
                 auto pathStr = geode::utils::string::pathToString(cTomatoImage);
                 auto tomato = CCSprite::create(pathStr.c_str());
 
