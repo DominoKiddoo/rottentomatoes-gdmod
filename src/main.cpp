@@ -1,11 +1,11 @@
 #include <Geode/Geode.hpp>
-#include <geode.custom-keybinds/include/Keybinds.hpp>
 #include <prevter.imageplus/include/api.hpp>
 #include <Geode/utils/cocos.hpp>
 #include <Geode/utils/string.hpp>
+#include <Geode/loader/GameEvent.hpp>
+#include <Geode/loader/SettingV3.hpp>
 
 using namespace geode::prelude;
-using namespace keybinds;
 
 auto playSFX = true;
 auto useGif = false;
@@ -14,46 +14,34 @@ $on_mod(Loaded) {
     auto mod = Mod::get();
 
     playSFX = mod->getSettingValue<bool>("playsound");
-    listenForSettingChangesV3<bool>("playsound", [](bool value) {
+    listenForSettingChanges<bool>("playsound", [](bool value) {
         playSFX = value;
     }, mod);
 
     useGif = mod->getSettingValue<bool>("customimages");
-    listenForSettingChangesV3<bool>("customimages", [](bool value) {
+    listenForSettingChanges<bool>("customimages", [](bool value) {
         useGif = value;
     }, mod);
 }
 
-$execute {
-    const char* BIND_ID = "dominodev.rottentomatoes/throw-tomato";
-
-    BindManager::get()->registerBindable({
-        BIND_ID,
-        "Throw Tomato",
-        "Throws a tomato at the screen.", 
-        { Keybind::create(KEY_T, Modifier::Alt) }, 
-        "Rotten Tomatoes"
-    });
-
-    new EventListener(+[](InvokeBindEvent* event) {
-        if (event->isDown()) {
+$on_game(Loaded) {
+    listenForKeybindSettingPresses("throw-keybind", [](Keybind const& keybind, bool down, bool repeat) {
+        if (down) { 
             auto director = CCDirector::sharedDirector();
             auto scene = director->getRunningScene();
-            if (!scene) return ListenerResult::Propagate;
-            
-            auto tomatoThrow = CCSprite::create("tomatothrow.webp"_spr);
-            if (!tomatoThrow) {
-                log::error("failed to load gif");
-                return ListenerResult::Propagate;
-            }
+            if (!scene) return;
             
             auto mousePos = geode::cocos::getMousePos();
             auto cTomatoImage = Mod::get()->getSettingValue<std::filesystem::path>("ctomatoimage");
 
             if (!useGif || cTomatoImage.empty()) {
-                auto tomato = imgp::AnimatedSprite::from(tomatoThrow);
-                log::info("Tomato thrown!");
+                auto tomatoThrow = CCSprite::create("tomatothrow.webp"_spr);
+                if (!tomatoThrow) {
+                    log::error("failed to load gif");
+                    return;
+                }
 
+                auto tomato = imgp::AnimatedSprite::from(tomatoThrow);
                 tomato->setScale(2.0f); 
                 scene->addChild(tomato, 999999); 
                 tomato->setPosition(mousePos);
@@ -64,108 +52,76 @@ $execute {
 
                 tomato->runAction(CCSequence::create(
                     CCDelayTime::create(0.47f),
-                    CallFuncExt::create([tomato]() {
+                    CallFuncExt::create([]() {
                         if (playSFX) {
                             FMODAudioEngine::get()->playEffect("splat.mp3"_spr);
                         }
                     }),
-                    
                     CCDelayTime::create(0.3f),
-
                     CallFuncExt::create([tomato]() {
                         tomato->pause();
                         tomato->unscheduleUpdate();
                     }),
-
                     CCDelayTime::create(3.0f),
                     CCFadeOut::create(1.f),
-
-                    CallFuncExt::create([tomato]() {
-                        tomato->removeFromParentAndCleanup(true);
-                    }),
-
+                    CCRemoveSelf::create(),
                     nullptr
                 ));
 
-                return ListenerResult::Propagate;
+                return;
             } else {
                 auto pathStr = geode::utils::string::pathToString(cTomatoImage);
                 auto tomato = CCSprite::create(pathStr.c_str());
 
                 if (!tomato) {
                     log::error("failed to load custom tomato image");
-                    return ListenerResult::Propagate;
+                    return;
                 }
 
                 auto ctScale = Mod::get()->getSettingValue<double>("ctomatoscale");
                 auto endScale = Mod::get()->getSettingValue<double>("ctomatoendingscale");
 
                 auto winSize = director->getWinSize();
-
                 CCPoint startPos = ccp(winSize.width / 2.f, -tomato->getContentSize().height);
-                CCPoint endPos = mousePos;
 
                 tomato->setPosition(startPos);
                 tomato->setScale(static_cast<float>(ctScale));
                 scene->addChild(tomato, 999999);
 
                 float totalTime = 0.35f;
-                float halfTime = totalTime / 2.0f;
                 float peakScale = static_cast<float>(ctScale) * 1.3f;
 
-                auto rawMove = CCMoveTo::create(totalTime, endPos);
-                auto move = CCEaseSineOut::create(rawMove);
-
-                auto tomatoSplatTexture = Mod::get()->getSettingValue<std::filesystem::path>("ctomatosplatimage");
-                auto tomatoSplatScale = Mod::get()->getSettingValue<double>("ctomatosplatscale");
-                
-                auto scaleUpRaw = CCScaleTo::create(halfTime, peakScale);
-                auto scaleUp = CCEaseSineOut::create(scaleUpRaw);
-
-                auto scaleDownRaw = CCScaleTo::create(halfTime, static_cast<float>(endScale));
-                auto scaleDown = CCEaseSineIn::create(scaleDownRaw);
-
-                auto scaleSeq = CCSequence::create(scaleUp, scaleDown, nullptr);
-
-                auto throwAction = CCSpawn::create(
-                    move,
-                    scaleSeq,
+                auto move = CCEaseSineOut::create(CCMoveTo::create(totalTime, mousePos));
+                auto scaleSeq = CCSequence::create(
+                    CCEaseSineOut::create(CCScaleTo::create(totalTime / 2.0f, peakScale)),
+                    CCEaseSineIn::create(CCScaleTo::create(totalTime / 2.0f, static_cast<float>(endScale))),
                     nullptr
                 );
 
                 tomato->runAction(CCSequence::create(
-                    throwAction,
-
-                    CallFuncExt::create([tomato, tomatoSplatTexture, tomatoSplatScale]() { 
+                    CCSpawn::create(move, scaleSeq, nullptr),
+                    CallFuncExt::create([tomato]() { 
                         if (playSFX) {
                             FMODAudioEngine::get()->playEffect("splat.mp3"_spr);
                         }
 
-                        auto splatPathStr = geode::utils::string::pathToString(tomatoSplatTexture);
+                        auto splatPath = Mod::get()->getSettingValue<std::filesystem::path>("ctomatosplatimage");
+                        auto splatScale = Mod::get()->getSettingValue<double>("ctomatosplatscale");
+                        auto splatPathStr = geode::utils::string::pathToString(splatPath);
                         auto texture = CCTextureCache::sharedTextureCache()->addImage(splatPathStr.c_str(), false);
                         
                         if (texture) {
                             tomato->setTexture(texture);
                             tomato->setTextureRect({0, 0, texture->getContentSize().width, texture->getContentSize().height});
                         }
-
-                        tomato->setScale(static_cast<float>(tomatoSplatScale));
+                        tomato->setScale(static_cast<float>(splatScale));
                     }),
-                        
                     CCDelayTime::create(3.0f),
                     CCFadeOut::create(1.f),
-                    CallFuncExt::create([tomato]() {
-                        tomato->removeFromParentAndCleanup(true);
-                    }),
-
+                    CCRemoveSelf::create(),
                     nullptr
                 ));
-
-                return ListenerResult::Propagate;
             }
-        } 
-
-        return ListenerResult::Propagate; 
-
-    }, InvokeBindFilter(nullptr, BIND_ID)); 
+        }
+    }); 
 }
