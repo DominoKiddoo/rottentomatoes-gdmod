@@ -25,7 +25,7 @@ $on_mod(Loaded) {
 }
 
 $on_game(Loaded) {
-    listenForKeybindSettingPresses("throw-keybind", [](Keybind const& keybind, bool down, bool repeat) {
+    listenForKeybindSettingPresses("throw-keybind", [](Keybind const& keybind, bool down, bool repeat, double time) {
         if (down) { 
             auto director = CCDirector::sharedDirector();
             auto scene = director->getRunningScene();
