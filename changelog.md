@@ -13,7 +13,7 @@
 # 1.0.4
 - Changed gif to webp to fix crash on some devices.
 
-# 1.0.4
+# 1.0.5
 - Fixed mod for 2.2081
 
 
