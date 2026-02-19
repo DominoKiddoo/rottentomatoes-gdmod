@@ -1,5 +1,5 @@
 {
-	"geode": "5.0.0-beta.2",
+	"geode": "5.0.0-beta.3",
 	"gd": {
 		"win": "2.2081",
 		"android": "2.2081",
@@ -8,7 +8,7 @@
 	},
 	"id": "dominodev.rottentomatoes",
 	"name": "Rotten Tomatoes",
-	"version": "v1.0.5",
+	"version": "v1.0.6",
 	"developer": "dominodev",
 	"description": "Throw tomatoes at things you dont like.",
 	"dependencies": {
@@ -30,7 +30,9 @@
 			"type": "keybind",
 			"name": "Throw Keybind",
 			"description": "Keybind for throwing the tomato.",
-			"default": ["Alt+T"]
+			"default": ["Alt+T"],
+			"category": "universal",
+			"migrate-from": "dominodev.rottentomatoes/throw-tomato"
 			
 		},
 

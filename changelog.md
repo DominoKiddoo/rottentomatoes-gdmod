@@ -16,4 +16,7 @@
 # 1.0.5
 - Fixed mod for 2.2081
 
+# 1.0.6
+- Updated to use new arguments in mod.json
+
 
