@@ -24,8 +24,11 @@ $on_mod(Loaded) {
     }, mod);
 }
 
+
+
 $on_game(Loaded) {
     listenForKeybindSettingPresses("throw-keybind", [](Keybind const& keybind, bool down, bool repeat, double time) {
+        auto overlayManager = OverlayManager::get();
         if (down) { 
             auto director = CCDirector::sharedDirector();
             auto scene = director->getRunningScene();
@@ -43,7 +46,8 @@ $on_game(Loaded) {
 
                 auto tomato = imgp::AnimatedSprite::from(tomatoThrow);
                 tomato->setScale(2.0f); 
-                scene->addChild(tomato, 999999); 
+                overlayManager->addChild(tomato); 
+                tomato->setZOrder(10);
                 tomato->setPosition(mousePos);
 
                 tomato->setForceLoop(false);
@@ -86,7 +90,8 @@ $on_game(Loaded) {
 
                 tomato->setPosition(startPos);
                 tomato->setScale(static_cast<float>(ctScale));
-                scene->addChild(tomato, 999999);
+                overlayManager->addChild(tomato); 
+                tomato->setZOrder(10);
 
                 float totalTime = 0.35f;
                 float peakScale = static_cast<float>(ctScale) * 1.3f;

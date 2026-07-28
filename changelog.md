@@ -19,4 +19,7 @@
 # 1.0.6
 - Updated to use new arguments in mod.json
 
+# 1.0.7
+- Changed to use overlaymanager
+
 
