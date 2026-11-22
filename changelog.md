@@ -22,4 +22,7 @@
 # 1.0.7
 - Changed to use overlaymanager
 
+# 1.0.8
+- Port to 2.2091
+
 

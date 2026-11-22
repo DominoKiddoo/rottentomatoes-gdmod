@@ -1,5 +1,5 @@
 #include <Geode/Geode.hpp>
-#include <prevter.imageplus/include/api.hpp>
+#include <prevter.imageplus/api.hpp>
 #include <Geode/utils/cocos.hpp>
 #include <Geode/utils/string.hpp>
 #include <Geode/loader/GameEvent.hpp>
@@ -35,7 +35,7 @@ $on_game(Loaded) {
             if (!scene) return;
             
             auto mousePos = geode::cocos::getMousePos();
-            auto cTomatoImage = Mod::get()->getSettingValue<std::filesystem::path>("ctomatoimage");
+            auto cTomatoImage = Mod::get()->getSettingValue<asp::fs::Path>("ctomatoimage");
 
             if (!useGif || cTomatoImage.empty()) {
                 auto tomatoThrow = CCSprite::create("tomatothrow.webp"_spr);
@@ -74,7 +74,7 @@ $on_game(Loaded) {
 
                 return;
             } else {
-                auto pathStr = geode::utils::string::pathToString(cTomatoImage);
+                auto pathStr = cTomatoImage.string();
                 auto tomato = CCSprite::create(pathStr.c_str());
 
                 if (!tomato) {
@@ -110,9 +110,9 @@ $on_game(Loaded) {
                             FMODAudioEngine::get()->playEffect("splat.mp3"_spr);
                         }
 
-                        auto splatPath = Mod::get()->getSettingValue<std::filesystem::path>("ctomatosplatimage");
+                        auto splatPath = Mod::get()->getSettingValue<asp::fs::Path>("ctomatosplatimage");
                         auto splatScale = Mod::get()->getSettingValue<double>("ctomatosplatscale");
-                        auto splatPathStr = geode::utils::string::pathToString(splatPath);
+                        auto splatPathStr = splatPath.string();
                         auto texture = CCTextureCache::sharedTextureCache()->addImage(splatPathStr.c_str(), false);
                         
                         if (texture) {
